@@ -1,0 +1,41 @@
+---
+- !user mark
+
+- !user darren
+
+- !user amy
+
+- !group admins
+
+- !group auditors
+
+- !grant
+  role: !group admins
+  members:
+    - !user mark
+    - !user darren
+
+- !permit
+  role: !group admins
+  privileges:
+    - create
+    - update
+    - read
+  resources:
+    - !policy root
+
+- !grant
+  role: !group auditors
+  members:
+    - !user amy
+
+- !permit
+  role: !group auditors
+  privileges:
+    - read
+  resources:
+    - !policy root
+
+- !policy
+  id: apps
+  owner: !group admins

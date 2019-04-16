@@ -1,0 +1,32 @@
+---
+- !policy
+  id: hosts
+  body:
+    - !host jenkins
+
+- !policy
+  id: ci
+  body:
+    - !layer
+
+    - !host-factory
+      layers: [ !layer ]
+
+    - !grant
+      role: !layer
+      member: !host /apps/hosts/jenkins
+
+- !policy
+  id: cd
+  body:
+    - !layer
+
+    - !host-factory
+      layers: [ !layer ]
+
+- !policy
+  id: secrets
+
+- !group ci
+
+- !group cd

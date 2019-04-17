@@ -15,8 +15,7 @@ print_head(){
   echo ""
 }
 print_info(){
-  local white=`tput setaf 7`
-  echo "${white}INFO: $1${reset}"
+  echo "INFO: $1"
   echo "INFO: $1" >> ${me}.log
 }
 print_success(){
@@ -142,11 +141,11 @@ sudo docker-compose pull
 
 #Generate Conjur OSS data-key and update docker-compose.yml
 print_info "Generating Conjur Data Key"
-sudo docker-compose run --no-deps --rm conjur data-key generate > data-key
-local data-key=$(< data-key)
+sudo docker-compose run --no-deps --rm conjur data-key generate > data_key
+local data_key=$(< data_key)
 print_info "Updating docker-compose.yml with Conjur Data Key"
-sed -i "s|CONJUR_DATA_KEY:.*|CONJUR_DATA_KEY: $data-key|g" docker-compose.yml
-print_info "Conjur Data Key is: $data-key"
+sed -i "s|CONJUR_DATA_KEY:.*|CONJUR_DATA_KEY: $data_key|g" docker-compose.yml
+print_info "Conjur Data Key is: $data_key"
 
 #Start containers with docker-compose.yml
 print_info "Starting Docker Containers - conjur-master, conjur-cli, database"

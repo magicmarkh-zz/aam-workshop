@@ -34,22 +34,22 @@ touch ${me}.log
 echo "Log file generated on $(date)" >> ${me}.log
 case "$(cat /etc/*-release | grep -w ID_LIKE)" in
   'ID_LIKE="rhel fedora"' )
-    print_success "OS is $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')\n"
+    print_success "OS is $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')"
     install_yum $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')
     ;;
   'ID_LIKE="fedora"' )
-    print_success "OS is $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')\n"
+    print_success "OS is $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')"
     install_yum $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')
     ;;
   'ID_LIKE=debian' )
-    print_success "OS is $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')\n"
+    print_success "OS is $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')"
     install_apt $(cat /etc/*-release | grep -w PRETTY_NAME | sed 's/PRETTY_NAME=//')
     ;;
 esac
 }
 
 install_yum(){
-print_head "Installing required packages for $1"
+print_head "Installing required packages for ${1}"
   
 #Update OS
 print_info "Installing dependencies via yum"
@@ -188,7 +188,7 @@ configure_conjur(){
 print_head "Configuring Conjur"
 
 print_info "Generating Conjur admin key"
-sudo docker-compose exec conjur conjurctl account create ws_admin > ws_admin_key
+sudo docker-compose exec conjur conjurctl account create workshop > ws_admin_key
 ws_key=$(cat ws_admin_key | awk '/API key for admin: /' | sed 's|API key for admin: ||')
 print_info "Admin API key is $ws_key"
 
@@ -202,8 +202,9 @@ sudo docker cp scripts/ conjur-cli:/
 
 #Init conjur session from CLI container
 print_info "Executing conjur init in conjur-cli container"
-sudo docker exec -i conjur-cli conjur init -u conjur-master -a ws_admin
+sudo docker exec -i conjur-cli conjur init -u conjur-master -a workshop
 
+print_success "Conjur OSS Configured"
 print_head "Conjur OSS Deployment Complete"
 }
 

@@ -1,20 +1,21 @@
-#Conjur POC Install - Master install and base policies 
+#Conjur OSS AAM Workshop Install  - Master install and base policies 
 #Please verify the commands ran before running this script in your environment
 
 #Global Variables
 reset=`tput sgr0`
 me=`basename "${0%.sh}"`
+white=`tput setaf 7`
 
 #Generic output functions
 print_head(){
   echo ""
   echo "==========================================================================="
-  echo "$1"
+  echo "${white}$1${reset}"
   echo "==========================================================================="
   echo ""
 }
 print_info(){
-  echo "INFO: $1"
+  echo "${white}INFO: $1${reset}"
   echo "INFO: $1" >> ${me}.log
 }
 print_success(){

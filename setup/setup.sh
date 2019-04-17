@@ -7,10 +7,9 @@ me=`basename "${0%.sh}"`
 
 #Generic output functions
 print_head(){
-  local white=`tput setaf 7`
   echo ""
   echo "==========================================================================="
-  echo "${white}$1${reset}"
+  echo "$1"
   echo "==========================================================================="
   echo ""
 }
@@ -100,7 +99,9 @@ sudo systemctl start docker
 sudo systemctl enable /usr/lib/systemd/system/docker.service >> ${me}.log 2>&1
 
 #Installing docker compose
+print_info "Downloading Docker Compose"
 sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+print_info "Enabling Docker Compose"
 sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 

@@ -66,18 +66,15 @@ install_conjur
 
 install_conjur(){
 #Load ini variables
-source <(grep = config.ini)
-
-#Load the Conjur container. Place conjur-appliance-version.tar.gz in the same folder as this script
-tarname=$(find conjur-app*)
-conjur_image=$(sudo docker load -i $tarname)
-conjur_image=$(echo $conjur_image | sed 's/Loaded image: //')
+local master_name=$(cat $PWD/config.ini | awk '/master_name=/' | sed 's/master_name=//')
+local company_name=$(cat $PWD/config.ini | awk '/company_name=/' | sed 's/company_name=//')
+local admin_password=$(cat $PWD/config.ini | awk '/admin_password=/' | sed 's/admin_password=//')
 
 #create docker network
 sudo docker network create conjur
 
 #start docker master container named "conjur-master"
-sudo docker container run -d --name $master_name --network conjur --restart=always --security-opt=seccomp:unconfined -p 443:443 -p 5432:5432 -p 1999:1999 $conjur_image
+sudo docker container run -d --name $master_name --network conjur --restart=always --security-opt=seccomp:unconfined -p 443:443 -p 5432:5432 -p 1999:1999 cyberark/conjur
 
 #creates company namespace and configures conjur for secrets storage
 sudo docker exec $master_name evoke configure master --hostname $master_name --admin-password $admin_password $company_name
@@ -87,6 +84,11 @@ configure_conjur
 }
 
 configure_conjur(){
+#Load ini variables
+local master_name=$(cat $PWD/config.ini | awk '/master_name=/' | sed 's/master_name=//')
+local company_name=$(cat $PWD/config.ini | awk '/company_name=/' | sed 's/company_name=//')
+local admin_password=$(cat $PWD/config.ini | awk '/admin_password=/' | sed 's/admin_password=//')
+  
 #create CLI container
 sudo docker container run -d --name conjur-cli --network conjur --restart=always --entrypoint "" cyberark/conjur-cli:5 sleep infinity
 

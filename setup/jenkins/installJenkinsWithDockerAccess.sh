@@ -1,5 +1,5 @@
 docker run \
-  -p 8080:8080 \
+  -p 9090:8080 \
   -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   --name jenkins \

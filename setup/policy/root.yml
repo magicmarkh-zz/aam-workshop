@@ -1,41 +1,65 @@
 ---
+#root policy 
+#declare users
 - !user mark
-
-- !user darren
-
 - !user amy
 
+#declare groups
 - !group admins
-
 - !group auditors
 
+#place users in groups
 - !grant
   role: !group admins
   members:
-    - !user mark
-    - !user darren
-
-- !permit
-  role: !group admins
-  privileges:
-    - create
-    - update
-    - read
-  resources:
-    - !policy root
+  - !user mark
 
 - !grant
   role: !group auditors
   members:
     - !user amy
 
+#grant permissions to groups
+- !grant
+  role: !user admin
+  members:
+    - !group admins
+
 - !permit
   role: !group auditors
   privileges:
     - read
-  resources:
-    - !policy root
+  resource: !policy root
 
-- !policy
-  id: apps
+
+# create a policy for hosts
+- !policy 
+  id: hosts
   owner: !group admins
+  body:
+    #declare hosts
+    - !host jenkins
+
+#declare secrets policy
+- !policy 
+  id: secrets
+  owner: !group admins
+  body:
+    #declare secrets
+    - &web-secrets
+      - !variable aws-secret
+      - !variable azure-secret
+      - !variable gcp-secret
+    #permit host to access secrets grouping explicitly
+    - !permit
+      role: !host /hosts/jenkins
+      privileges:
+        - read
+        - execute
+      resource: *web-secrets
+    #permit auditor to access secrets grouping in read only (cannot see secret, but can audit use)
+    - !permit
+      role: !group /auditors
+      privileges:
+        - read
+      resource: *web-secrets

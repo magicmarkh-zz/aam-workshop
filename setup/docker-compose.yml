@@ -26,3 +26,9 @@ services:
       CONJUR_ACCOUNT:
       CONJUR_AUTHN_API_KEY:
       CONJUR_AUTHN_LOGIN: admin
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "9090:8080"

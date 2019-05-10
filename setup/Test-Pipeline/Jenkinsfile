@@ -1,0 +1,6 @@
+node{ 
+    stage('retrieve secret') {withCredentials([conjurSecretCredential(credentialsId:'aws-secret',variable:'AWS_SECRET')]){ 
+        sh'echo $AWS_SECRET > token.txt || exit 0' 
+        } 
+    } 
+}
